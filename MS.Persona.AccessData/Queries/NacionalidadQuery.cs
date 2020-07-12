@@ -52,32 +52,50 @@ namespace MS.Persona.AccessData.Queries
 
         public ResponseNacionalidad GetNacionalidadByNacionalidadId(int NacionalidadId)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
-
-            var nacionalidad = db.Query("Nacionalidad")
-                .Select("Nacionalidad.NacionalidadId", "Nacionalidad.TipoDeNacionalidad")
-                .Where("NacionalidadId", "=", NacionalidadId)
-                .FirstOrDefault<ResponseNacionalidad>();
-
-
-            return new ResponseNacionalidad
+            try
             {
-                NacionalidadId = nacionalidad.NacionalidadId,
-                TipoDeNacionalidad = nacionalidad.TipoDeNacionalidad
-            };
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
+
+                var nacionalidad = db.Query("Nacionalidad")
+                    .Select("Nacionalidad.NacionalidadId", "Nacionalidad.TipoDeNacionalidad")
+                    .Where("NacionalidadId", "=", NacionalidadId)
+                    .FirstOrDefault<ResponseNacionalidad>();
+
+                if (nacionalidad == null) {
+                    return new ResponseNacionalidad();
+                }
+
+                return new ResponseNacionalidad
+                {
+                    NacionalidadId = nacionalidad.NacionalidadId,
+                    TipoDeNacionalidad = nacionalidad.TipoDeNacionalidad
+                };
+            }
+            catch (Exception e) {
+                throw e;
+            }
         }
 
         public ResponseNacionalidad GetNacionalidadByTipoNacionalidad(string TipoDeNacionalidad)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
+            try
+            {
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
 
-            var nacionalidad = db.Query("Nacionalidad")
-                .Select("Nacionalidad.NacionalidadId", "Nacionalidad.TipoDeNacionalidad")
-                .Where("TipoDeNacionalidad", "=", TipoDeNacionalidad)
-                .FirstOrDefault<ResponseNacionalidad>();
+                var nacionalidad = db.Query("Nacionalidad")
+                    .Select("Nacionalidad.NacionalidadId", "Nacionalidad.TipoDeNacionalidad")
+                    .Where("TipoDeNacionalidad", "=", TipoDeNacionalidad)
+                    .FirstOrDefault<ResponseNacionalidad>();
 
-            return nacionalidad;
+                if (nacionalidad == null) {
+                    throw new ArgumentNullException();
+                }
 
+                return nacionalidad;
+            }
+            catch (Exception e) {
+                throw e;
+            }
         }
     }
 }

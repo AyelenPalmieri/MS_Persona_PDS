@@ -35,38 +35,54 @@ namespace MS.Persona.AccessData.Queries
 
         public EstadoCivilDto GetEstadoCivilDTOByTipoEstadoCivil(string TipoEstadoCivil)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
-
-            var estadoCivil = db.Query("EstadoCivil")
-                .Select("EstadoCivil.EstadoCivilId", "EstadoCivil.TipoEstadoCivil")
-                .Where("TipoEstadoCivil", "=", TipoEstadoCivil)
-                .FirstOrDefault<EstadoCivilDto>();
-
-
-            return new EstadoCivilDto
+            try
             {
-                EstadoCivilId = estadoCivil.EstadoCivilId,
-                TipoEstadoCivil = estadoCivil.TipoEstadoCivil
-            };
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
 
+                var estadoCivil = db.Query("EstadoCivil")
+                    .Select("EstadoCivil.EstadoCivilId", "EstadoCivil.TipoEstadoCivil")
+                    .Where("TipoEstadoCivil", "=", TipoEstadoCivil)
+                    .FirstOrDefault<EstadoCivilDto>();
+
+                if (estadoCivil == null) {
+                    throw new ArgumentNullException();
+                }
+
+                return new EstadoCivilDto
+                {
+                    EstadoCivilId = estadoCivil.EstadoCivilId,
+                    TipoEstadoCivil = estadoCivil.TipoEstadoCivil
+                };
+            }
+            catch (Exception e) {
+                throw e;
+            }
         }
 
         public EstadoCivilDto GetEstadoCivilDTOByEstadoCivilId(int EstadoCivilId)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
-
-            var estadoCivil = db.Query("EstadoCivil")
-                .Select("EstadoCivil.EstadoCivilId", "EstadoCivil.TipoEstadoCivil")
-                .Where("EstadoCivilId", "=", EstadoCivilId)
-                .FirstOrDefault<EstadoCivilDto>();
-
-
-            return new EstadoCivilDto
+            try
             {
-                EstadoCivilId = estadoCivil.EstadoCivilId,
-                TipoEstadoCivil = estadoCivil.TipoEstadoCivil
-            };
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
 
+                var estadoCivil = db.Query("EstadoCivil")
+                    .Select("EstadoCivil.EstadoCivilId", "EstadoCivil.TipoEstadoCivil")
+                    .Where("EstadoCivilId", "=", EstadoCivilId)
+                    .FirstOrDefault<EstadoCivilDto>();
+
+                if (estadoCivil == null) {
+                    return new EstadoCivilDto();
+                }
+
+                return new EstadoCivilDto
+                {
+                    EstadoCivilId = estadoCivil.EstadoCivilId,
+                    TipoEstadoCivil = estadoCivil.TipoEstadoCivil
+                };
+            }
+            catch (Exception e) {
+                throw e;
+            }
         }
 
         public EstadoCivil GetEstadoCivilByTipoEstadoCivil(string TipoEstadoCivil)

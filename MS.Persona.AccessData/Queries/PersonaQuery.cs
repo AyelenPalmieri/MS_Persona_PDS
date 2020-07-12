@@ -96,45 +96,57 @@ namespace MS.Persona.AccessData.Queries
 
         public ResponsePersonaConId GetPersonaByDNI(int Dni)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
-
-            var persona = db.Query("Persona")
-                .Select("Persona.PersonaId", "Persona.Dni", "Persona.Nombre", "Persona.Apellido",
-                "Persona.GeneroId", "Persona.EstadoCivilId", "Persona.NacionalidadId", "Persona.LocalidadId",
-                "Persona.Direccion", "Persona.TieneHijos", "Persona.Fecha_Defuncion")
-                .Where("Dni", "=", Dni)
-                .FirstOrDefault<ResponsePersonaConId>();
-
-            var datetime = db.Query("Persona")
-                .Select("Persona.Fecha_Nacimiento")
-                //.ForSqlServer(q => q.SelectRaw("CAST([DateTime] as DATETIME)"))
-                .Where("Dni", "=", Dni)
-                .FirstOrDefault<DateTime>().ToString("yyyy-MM-ddTHH:mm:ss");
-
-
-            var provinciaDePersona = db.Query("Provincia")
-                .Select("Provincia.ProvinciaId", "Provincia.NombreProvincia")
-                .Where("Persona.DNI", $"{Dni}")
-                .Join("Localidad", "Localidad.ProvinciaId", "Provincia.ProvinciaId")
-                .Join("Persona", "Localidad.LocalidadId", "Persona.LocalidadId")
-                .FirstOrDefault<ProvinciaDto>();
-
-            return new ResponsePersonaConId
+            try
             {
-                PersonaId = persona.PersonaId,
-                Dni = persona.Dni,
-                Nombre = persona.Nombre,
-                Apellido = persona.Apellido,
-                FechaNacimiento = Convert.ToDateTime(datetime),
-                GeneroId = persona.GeneroId,
-                EstadoCivilId = persona.EstadoCivilId,
-                NacionalidadId = persona.NacionalidadId,
-                LocalidadId = persona.LocalidadId,
-                ProvinciaId = provinciaDePersona.ProvinciaId,
-                Direccion = persona.Direccion,
-                TieneHijos = persona.TieneHijos,
-                FechaDefuncion = persona.FechaDefuncion
-            };
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
+
+                var persona = db.Query("Persona")
+                    .Select("Persona.PersonaId", "Persona.Dni", "Persona.Nombre", "Persona.Apellido",
+                    "Persona.GeneroId", "Persona.EstadoCivilId", "Persona.NacionalidadId", "Persona.LocalidadId",
+                    "Persona.Direccion", "Persona.TieneHijos", "Persona.Fecha_Defuncion")
+                    .Where("Dni", "=", Dni)
+                    .FirstOrDefault<ResponsePersonaConId>();
+
+                if (persona == null) {
+                    //throw new System.ArgumentException("Persona no existe", "persona");
+                    return new ResponsePersonaConId();
+                }
+
+                var datetime = db.Query("Persona")
+                    .Select("Persona.Fecha_Nacimiento")
+                    //.ForSqlServer(q => q.SelectRaw("CAST([DateTime] as DATETIME)"))
+                    .Where("Dni", "=", Dni)
+                    .FirstOrDefault<DateTime>().ToString("yyyy-MM-ddTHH:mm:ss");
+
+
+                var provinciaDePersona = db.Query("Provincia")
+                    .Select("Provincia.ProvinciaId", "Provincia.NombreProvincia")
+                    .Where("Persona.DNI", $"{Dni}")
+                    .Join("Localidad", "Localidad.ProvinciaId", "Provincia.ProvinciaId")
+                    .Join("Persona", "Localidad.LocalidadId", "Persona.LocalidadId")
+                    .FirstOrDefault<ProvinciaDto>();
+
+                return new ResponsePersonaConId
+                {
+                    PersonaId = persona.PersonaId,
+                    Dni = persona.Dni,
+                    Nombre = persona.Nombre,
+                    Apellido = persona.Apellido,
+                    FechaNacimiento = Convert.ToDateTime(datetime),
+                    GeneroId = persona.GeneroId,
+                    EstadoCivilId = persona.EstadoCivilId,
+                    NacionalidadId = persona.NacionalidadId,
+                    LocalidadId = persona.LocalidadId,
+                    ProvinciaId = provinciaDePersona.ProvinciaId,
+                    Direccion = persona.Direccion,
+                    TieneHijos = persona.TieneHijos,
+                    FechaDefuncion = persona.FechaDefuncion
+                };
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public int ModifyFechaDefuncion(PersonaDefuncionDto modelDefuncion)

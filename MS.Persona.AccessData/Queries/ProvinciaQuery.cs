@@ -35,19 +35,28 @@ namespace MS.Persona.AccessData.Queries
 
         public ProvinciaDto GetProvinciasDTOByNombreProvincia(string NombreProvincia)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
-
-            var provincia = db.Query("Provincia")
-                .Select("Provincia.ProvinciaId", "Provincia.NombreProvincia")
-                .Where("NombreProvincia", "=", NombreProvincia)
-                .FirstOrDefault<ProvinciaDto>();
-
-
-            return new ProvinciaDto
+            try
             {
-                ProvinciaId = provincia.ProvinciaId,
-                NombreProvincia = provincia.NombreProvincia
-            };
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
+
+                var provincia = db.Query("Provincia")
+                    .Select("Provincia.ProvinciaId", "Provincia.NombreProvincia")
+                    .Where("NombreProvincia", "=", NombreProvincia)
+                    .FirstOrDefault<ProvinciaDto>();
+
+                if (provincia == null) {
+                    throw new ArgumentNullException();
+                }
+
+                return new ProvinciaDto
+                {
+                    ProvinciaId = provincia.ProvinciaId,
+                    NombreProvincia = provincia.NombreProvincia
+                };
+            }
+            catch (Exception e) {
+                throw e;
+            }
         }
 
         public Provincia GetProvinciaByNombreProvincia(string NombreProvincia)

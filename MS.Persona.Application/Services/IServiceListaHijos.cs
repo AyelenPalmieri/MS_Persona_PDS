@@ -9,6 +9,7 @@ namespace MS.Persona.Application.Services
     {
         ResponseListaHijosDto GetHijosByPadreDni(int PadreDni);
         ResponseListaHijosDto SetHijos(RequestListaHijosDto listaHijos);
-        
+        bool PersonaExist(int Dni);
+
     }
 }

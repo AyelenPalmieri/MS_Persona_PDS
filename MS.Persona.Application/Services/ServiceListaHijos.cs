@@ -24,6 +24,11 @@ namespace MS.Persona.Application.Services
             return _query.GetHijosByPadreDni(PadreDni);
         }
 
+        public bool PersonaExist(int Dni)
+        {
+            return _query.PersonaExist(Dni);
+        }
+
         public ResponseListaHijosDto SetHijos(RequestListaHijosDto listaHijos)
         {
             bool personaTieneHijos = _query.PersonaTieneHijos(listaHijos.PadreDni);
@@ -33,7 +38,9 @@ namespace MS.Persona.Application.Services
                 PadreDni = listaHijos.PadreDni,
                 HijoDni = listaHijos.HijoDni
             };
+
             _repository.Add<ListaHijos>(hijosEntity);
+
 
             if (personaTieneHijos == false)
             {

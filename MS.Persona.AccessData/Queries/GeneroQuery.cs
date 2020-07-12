@@ -62,14 +62,24 @@ namespace MS.Persona.AccessData.Queries
 
         public ResponseGeneros GetGeneroByTipoGenero(string TipoGenero)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
+            try
+            {
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
 
-            var genero = db.Query("Genero")
-                .Select("Genero.GeneroId", "Genero.TipoGenero")
-                .Where("TipoGenero", "=", TipoGenero)
-                .FirstOrDefault<ResponseGeneros>();
+                var genero = db.Query("Genero")
+                    .Select("Genero.GeneroId", "Genero.TipoGenero")
+                    .Where("TipoGenero", "=", TipoGenero)
+                    .FirstOrDefault<ResponseGeneros>();
 
-            return genero;
+                if (genero == null) {
+                    throw new ArgumentNullException();
+                }
+
+                return genero;
+            }
+            catch (Exception e) {
+                throw e;
+            }
 
         }
 

@@ -39,6 +39,23 @@ namespace MS.Persona.AccessData.Queries
             };
         }
 
+        public bool PersonaExist(int Dni) 
+        {
+            var db = new QueryFactory(_connection, _sqlKataCompiler);
+
+            var personaExist = db.Query("Persona")
+                .Select("Persona.Dni")
+                .Where("Dni", "=", Dni)
+                .FirstOrDefault<bool>();
+
+            if (personaExist == true)
+            {
+                return personaExist;
+            }
+            else
+                return false;
+        }
+
         public bool PersonaTieneHijos(int PadreDni)
         {
             var db = new QueryFactory(_connection, _sqlKataCompiler);

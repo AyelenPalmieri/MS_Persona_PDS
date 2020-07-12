@@ -42,13 +42,25 @@ namespace MS.Persona.API.Controllers
         {
             try
             {
-                ResponseListaHijosDto listaHijos = _service.SetHijos(requestlistaHijos);
-                return new JsonResult(listaHijos) { StatusCode = 201 };
-            }
-            catch (Exception e)
+                bool padreExist = _service.PersonaExist(requestlistaHijos.PadreDni);
+                bool hijoExist = _service.PersonaExist(requestlistaHijos.HijoDni);
+
+                if (padreExist == true && hijoExist == true)
+                {
+                    if (requestlistaHijos.HijoDni != requestlistaHijos.PadreDni)
+                    {
+                        ResponseListaHijosDto listaHijos = _service.SetHijos(requestlistaHijos);
+                        return new JsonResult(listaHijos) { StatusCode = 201 };
+                    }
+                    return StatusCode((int)HttpStatusCode.BadRequest);
+                }
+                else {
+                    return StatusCode((int)HttpStatusCode.BadRequest);
+                }
+            } catch (Exception e)
             {
                 return StatusCode((int)HttpStatusCode.BadRequest);
             }
         }
-    }
+    }      
 }

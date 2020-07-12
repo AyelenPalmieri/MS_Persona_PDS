@@ -35,36 +35,54 @@ namespace MS.Persona.AccessData.Queries
 
         public LocalidadDto GetLocalidadDTOByNombreLocalidad(string NombreLocalidad)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
-
-            var localidad = db.Query("Localidad")
-                .Select("Localidad.LocalidadId", "Localidad.NombreLocalidad")
-                .Where("NombreLocalidad", "=", NombreLocalidad)
-                .FirstOrDefault<LocalidadDto>();
-
-
-            return new LocalidadDto
+            try
             {
-                LocalidadId = localidad.LocalidadId,
-                NombreLocalidad = localidad.NombreLocalidad
-            };
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
+
+                var localidad = db.Query("Localidad")
+                    .Select("Localidad.LocalidadId", "Localidad.NombreLocalidad")
+                    .Where("NombreLocalidad", "=", NombreLocalidad)
+                    .FirstOrDefault<LocalidadDto>();
+
+                if (localidad == null) {
+                    throw new ArgumentNullException();
+                }
+
+                return new LocalidadDto
+                {
+                    LocalidadId = localidad.LocalidadId,
+                    NombreLocalidad = localidad.NombreLocalidad
+                };
+            }
+            catch (Exception e){
+                throw e;
+            }
         }
 
         public LocalidadDto GetLocalidadByLocalidadId(int LocalidadId)
         {
-            var db = new QueryFactory(_connection, _sqlKataCompiler);
-
-            var localidad = db.Query("Localidad")
-                .Select("Localidad.LocalidadId", "Localidad.ProvinciaId", "Localidad.NombreLocalidad")
-                .Where("LocalidadId", "=", LocalidadId)
-                .FirstOrDefault<LocalidadDto>();
-
-
-            return new LocalidadDto
+            try
             {
-                LocalidadId = localidad.LocalidadId,
-                NombreLocalidad = localidad.NombreLocalidad
-            };
+                var db = new QueryFactory(_connection, _sqlKataCompiler);
+
+                var localidad = db.Query("Localidad")
+                    .Select("Localidad.LocalidadId", "Localidad.ProvinciaId", "Localidad.NombreLocalidad")
+                    .Where("LocalidadId", "=", LocalidadId)
+                    .FirstOrDefault<LocalidadDto>();
+
+                if (localidad == null) {
+                    return new LocalidadDto();
+                }
+
+                return new LocalidadDto
+                {
+                    LocalidadId = localidad.LocalidadId,
+                    NombreLocalidad = localidad.NombreLocalidad
+                };
+            }
+            catch (Exception e) {
+                throw e;
+            }
         }
 
         public ResponseLocalidadesPorProvinciaDto GetLocalidadesByNombreProvincia(string NombreProvincia)

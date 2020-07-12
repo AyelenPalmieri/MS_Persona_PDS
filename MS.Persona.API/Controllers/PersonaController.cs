@@ -101,6 +101,9 @@ namespace MS.Persona.API.Controllers
             try
             {
                 var persona = _service.GetPersonaByDNI(Dni);
+                if (persona.PersonaId == 0) { 
+                    return StatusCode((int)HttpStatusCode.BadRequest);
+                }
                 return new JsonResult(persona) { StatusCode = 200 };
             }
             catch (Exception e)
