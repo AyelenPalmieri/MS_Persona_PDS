@@ -1,6 +1,7 @@
 ###MicroServicio Persona
 
 (Se puede correr, previamente, Script en SqlServer para cargar Provincias, Localidades, Generos, Estados Civiles y Nacionalidades a las tablas correspondientes)
+(Para correr la app, abrir la solucion que se encuentra dentro de MS.Persona.API)
 
 ####EndPoints creados con sus correspondientes Resquest Json y Response Json
 
