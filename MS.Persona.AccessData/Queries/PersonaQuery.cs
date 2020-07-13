@@ -103,12 +103,11 @@ namespace MS.Persona.AccessData.Queries
                 var persona = db.Query("Persona")
                     .Select("Persona.PersonaId", "Persona.Dni", "Persona.Nombre", "Persona.Apellido",
                     "Persona.GeneroId", "Persona.EstadoCivilId", "Persona.NacionalidadId", "Persona.LocalidadId",
-                    "Persona.Direccion", "Persona.TieneHijos", "Persona.Fecha_Defuncion")
+                    "Persona.Direccion", "Persona.TieneHijos")
                     .Where("Dni", "=", Dni)
                     .FirstOrDefault<ResponsePersonaConId>();
 
                 if (persona == null) {
-                    //throw new System.ArgumentException("Persona no existe", "persona");
                     return new ResponsePersonaConId();
                 }
 
@@ -118,6 +117,10 @@ namespace MS.Persona.AccessData.Queries
                     .Where("Dni", "=", Dni)
                     .FirstOrDefault<DateTime>().ToString("yyyy-MM-ddTHH:mm:ss");
 
+                var datetimedef = db.Query("Persona")
+                   .Select("Persona.Fecha_Defuncion")
+                   .Where("Dni", "=", Dni)
+                   .FirstOrDefault<DateTime>().ToString("yyyy-MM-ddTHH:mm:ss");
 
                 var provinciaDePersona = db.Query("Provincia")
                     .Select("Provincia.ProvinciaId", "Provincia.NombreProvincia")
@@ -140,7 +143,7 @@ namespace MS.Persona.AccessData.Queries
                     ProvinciaId = provinciaDePersona.ProvinciaId,
                     Direccion = persona.Direccion,
                     TieneHijos = persona.TieneHijos,
-                    FechaDefuncion = persona.FechaDefuncion
+                    FechaDefuncion = Convert.ToDateTime(datetimedef)
                 };
             }
             catch (Exception e)
