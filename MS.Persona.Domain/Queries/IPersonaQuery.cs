@@ -12,6 +12,7 @@ namespace MS.Persona.Domain.Queries
         PersonaDto GetPersonaByID(int PersonaId);
         int GetPersonaIdByDNI(int Dni);
         int ModifyFechaDefuncion(PersonaDefuncionDto modelDefuncion);
+        int ModifyPersonaEstadoCivil(PersonaEstadoCivil modelPersona);
         int ModifyPersona(PersonaDatosModificables modelPersona);
 
     }

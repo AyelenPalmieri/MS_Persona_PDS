@@ -56,6 +56,28 @@ namespace MS.Persona.API.Controllers
             }
         }
 
+        [HttpPut("ModifyPersonaEstadoCivil")]
+        public IActionResult ModifyPersonaEstadoCivil([FromBody] PersonaModificableEstadoCivil modelPersona)
+        {
+            try
+            {
+                bool condicion = _service.IsValidEstadoCivil(modelPersona);
+                if (condicion == true)
+                {
+                    int affected = _service.ModifyPersonaEstadoCivil(modelPersona);
+                    return new JsonResult(affected) { StatusCode = 200 };
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest);
+            }
+        }
+
         [HttpPut("ModifyPersona")]
         public IActionResult ModifyPersona([FromBody] PersonaDatosModificablesString modelPersona)
         {
@@ -92,6 +114,22 @@ namespace MS.Persona.API.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest);
             }
 
+        }
+
+        //GET /api/persona/GetPersonaByID{PersonaId}
+        [HttpGet]
+        [Route("GetPersonaByID/{PersonaId}")]
+        public IActionResult GetPersonaByID(int PersonaId)
+        {
+            try
+            {
+                var persona = _service.GetPersonaByID(PersonaId);
+                return new JsonResult(persona) { StatusCode = 200 };
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest);
+            }
         }
 
         //GET /api/persona/GetPersona{Dni}

@@ -49,9 +49,15 @@ namespace MS.Persona.AccessData.Queries
             var persona = db.Query("Persona")
                 .Select("Persona.Dni", "Persona.Nombre", "Persona.Apellido", "Persona.Fecha_Nacimiento",
                 "Persona.GeneroId", "Persona.EstadoCivilId", "Persona.NacionalidadId", "Persona.LocalidadId",
-                "Persona.Direccion", "Persona.ListaHijosId", "Persona.Fecha_Defuncion")
+                "Persona.Direccion", "Persona.TieneHijos", "Persona.Fecha_Defuncion")
                 .Where("PersonaId", "=", PersonaId)
                 .FirstOrDefault<PersonaDto>();
+
+            var datetime = db.Query("Persona")
+                    .Select("Persona.Fecha_Nacimiento")
+                    //.ForSqlServer(q => q.SelectRaw("CAST([DateTime] as DATETIME)"))
+                    .Where("PersonaId", "=", PersonaId)
+                    .FirstOrDefault<DateTime>().ToString("yyyy-MM-ddTHH:mm:ss");
 
             if (persona != null)
             {
@@ -60,7 +66,7 @@ namespace MS.Persona.AccessData.Queries
                     Dni = persona.Dni,
                     Nombre = persona.Nombre,
                     Apellido = persona.Apellido,
-                    FechaNacimiento = persona.FechaNacimiento,
+                    FechaNacimiento = Convert.ToDateTime(datetime),
                     Genero = persona.Genero,
                     EstadoCivil = persona.EstadoCivil,
                     Nacionalidad = persona.Nacionalidad,
@@ -94,6 +100,19 @@ namespace MS.Persona.AccessData.Queries
             return personaModificada;
         }
 
+        public int ModifyPersonaEstadoCivil(PersonaEstadoCivil modelPersona)
+        {
+            var db = new QueryFactory(_connection, _sqlKataCompiler);
+
+            int personaModificada = db.Query("Persona").Where("Dni", "=", modelPersona.Dni).Update(new
+                {
+                    EstadoCivilId = modelPersona.EstadoCivil,
+
+                });
+
+            return personaModificada;
+        }
+
         public ResponsePersonaConId GetPersonaByDNI(int Dni)
         {
             try
@@ -117,10 +136,17 @@ namespace MS.Persona.AccessData.Queries
                     .Where("Dni", "=", Dni)
                     .FirstOrDefault<DateTime>().ToString("yyyy-MM-ddTHH:mm:ss");
 
-                var datetimedef = db.Query("Persona")
-                   .Select("Persona.Fecha_Defuncion")
-                   .Where("Dni", "=", Dni)
-                   .FirstOrDefault<DateTime>().ToString("yyyy-MM-ddTHH:mm:ss");
+                dynamic datetimedefprueba = db.Query("Persona")
+                    .Select("Persona.Fecha_Defuncion")
+                    .Where("Dni", "=", Dni)
+                    .FirstOrDefault<DateTime?>();
+
+                DateTime datetimedef = new DateTime(0001, 01, 01, 00, 00, 00);
+
+                if ( datetimedefprueba != null) {
+                    datetimedef = datetimedefprueba;
+                }
+
 
                 var provinciaDePersona = db.Query("Provincia")
                     .Select("Provincia.ProvinciaId", "Provincia.NombreProvincia")

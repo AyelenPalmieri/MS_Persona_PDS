@@ -92,6 +92,20 @@ namespace Services
             return _query.ModifyFechaDefuncion(modelDefuncion);
         }
 
+        public int ModifyPersonaEstadoCivil(PersonaModificableEstadoCivil modelPersona)
+        {
+
+            EstadoCivilDto estadocivil = _serviceEstadoCivil.GetEstadoCivilDTOByTipoEstadoCivil(modelPersona.EstadoCivil);
+
+            var personaModify = new PersonaEstadoCivil
+            {
+                Dni = modelPersona.Dni,
+                EstadoCivil = estadocivil.EstadoCivilId,
+            };
+
+            return _query.ModifyPersonaEstadoCivil(personaModify);
+        }
+
         public bool IsValid(PersonaDatosModificablesString personaDatosModificablesString)
         {
             if (personaDatosModificablesString.Dni == null)
@@ -121,6 +135,24 @@ namespace Services
             {
                 return false;
             }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool IsValidEstadoCivil(PersonaModificableEstadoCivil modelPersona)
+        {
+            if (modelPersona.Dni == null)
+            {
+                return false;
+            }
+
+            if (modelPersona.EstadoCivil == null)
+            {
+                return false;
+            }
+
             else
             {
                 return true;

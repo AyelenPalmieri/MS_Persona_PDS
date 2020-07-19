@@ -13,6 +13,8 @@ namespace Services
         IEnumerable<PersonaDto> GetPersonas();
         int ModifyFechaDefuncion(PersonaDefuncionDto modelDefuncion);
         int ModifyPersona(PersonaDatosModificablesString modelPersona);
+        int ModifyPersonaEstadoCivil(PersonaModificableEstadoCivil modelPersona);
         bool IsValid(PersonaDatosModificablesString personaDatosModificablesString);
+        bool IsValidEstadoCivil(PersonaModificableEstadoCivil modelPersona);
     }
 }
